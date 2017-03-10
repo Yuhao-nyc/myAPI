@@ -1,0 +1,32 @@
+{
+  "name": "myapi",
+  "version": "1.0.0",
+  "description": "my RESTful API",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Yuhao-nyc/myAPI.git"
+  },
+  "dependencies": {
+    "body-parser": "~1.0.1",
+    "express": "~4.0.0",
+    "mongoose": "~4.4.19",
+    "node-restful": "^0.2.6",
+    "nodemon": "^1.11.0"
+  },
+  "keywords": [
+    "RESTful",
+    "NodeJS",
+    "Express"
+  ],
+  "author": "Yuhao",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Yuhao-nyc/myAPI/issues"
+  },
+  "homepage": "https://github.com/Yuhao-nyc/myAPI#readme"
+}
