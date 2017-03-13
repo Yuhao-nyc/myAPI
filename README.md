@@ -1,2 +1,2 @@
 # myAPI
-Node.JS, Express built API
+my own RESTful API setting up with Node.JS, Express, MongoDB
