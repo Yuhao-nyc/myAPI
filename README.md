@@ -1,2 +1,2 @@
 # myAPI
-my own RESTful API setting up with Node.JS, Express, MongoDB
+A stock trading info RESTful API built with Node.JS, Express, MongoDB
