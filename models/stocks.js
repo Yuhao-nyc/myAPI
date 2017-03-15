@@ -5,6 +5,7 @@ var mongoose = restful.mongoose;  //extending of mongoose
 
 
 //schema
+//data types: String Boolean Date Array Number ObjectId Mixed Buffer
 var stockSchema = new mongoose.Schema({
     symbol: String,
     open: Number,
@@ -15,4 +16,4 @@ var stockSchema = new mongoose.Schema({
 
 module.exports = restful.model('Products', stockSchema);
 
-console.log('stock api is running !')
+console.log('stock api is up and running!')

@@ -10,7 +10,7 @@ var router = express.Router();
 var Stocks = require('../models/stocks');
 
 //create a local data source and save to mongo DB without using Postman
-var stock = new Stocks({symbol: 'NODEJS', open: 2229999, close: 122211111, trades: false});
+/*var stock = new Stocks({symbol: 'NODEJS', open: 2229999, close: 122211111, trades: false});
 stock.save(function(err){
   if(err)
     console.log(err);
@@ -56,10 +56,15 @@ Stocks.findOneAndUpdate({symbol: 'ADBE'}, {open: '98'}, callback)
 //Model.findByIdAndRemove(id, [options], [callback])
 //Model.findOneAndRemove(conditions, [options], [callback])
 Stocks.remove({symbol: 'ADBE'}, callback)
+*/
 
 //Routes
 Stocks.methods(['get', 'put', 'post', 'delete']);
 Stocks.register(router, '/stocks');
+
+router.get('/', function(req, res) {
+    res.render('index', {title: 'Stock API app'});
+})
 
 //return router
 module.exports = router;
