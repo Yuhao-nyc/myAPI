@@ -8,7 +8,9 @@ var mongoose = restful.mongoose;  //extending of mongoose
 var stockSchema = new mongoose.Schema({
     symbol: String,
     open: Number,
-    close: Number
+    close: Number,
+    trades: Boolean,
+    updated_at: {type: Date, default: Date.now}
 })
 
 module.exports = restful.model('Products', stockSchema);
