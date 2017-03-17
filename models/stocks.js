@@ -9,8 +9,11 @@ var mongoose = restful.mongoose;  //extending of mongoose
 var stockSchema = new mongoose.Schema({
     symbol: String,
     open: Number,
-    close: Number,
-    trades: Boolean,
+    high: Number,
+    low: Number,
+    volume: String,
+    average_volume: String,
+    volatility: String,
     updated_at: {type: Date, default: Date.now}
 })
 

@@ -4,9 +4,9 @@ var router = express.Router();
 var app = express();
 // set your port
 var port = process.env.PORT || 8080;
-
-
 var bodyParser = require('body-parser');
+
+app.use('/assets', express.static(__dirname + '/assets'));
 
 //connects to DB
 var mongoose = require('mongoose');
@@ -22,7 +22,6 @@ mongoose.connect('mongodb://localhost/stocks_table')
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
-
 app.use('/api', require('./routes/apiStock'));  //use is the route apiStock.js, require is just the file where is coming from
 
 app.use('/api/', function (req, res, next) {
@@ -30,16 +29,43 @@ app.use('/api/', function (req, res, next) {
   next();
 });
 
-/* app.use(function (req, res, next) {
-  var ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
-  console.log('your IP address is', ip);
-  next();
-}); */
-
+//send a simple message to the page
 /*app.get('/', function(req, res) {
   res.send('API working now');
 })*/
 
+//parse JSON from url
+var request = require('request');
+var url_json = 'http://localhost:8080/api/stocks';
+request(url_json, function(err, res, body) {
+
+    if (!err && res.statusCode === 200) {
+      var apiResponse = JSON.parse(body);
+
+      for (var i=0; i<apiResponse.length; i++) {
+          console.log('symbols: ' + apiResponse[i].symbol + ';' +
+          ' stock open price: ' + apiResponse[i].open + ';' +
+          ' stock today highest price: ' + apiResponse[i].high + ';' +
+          ' stock today lowest price: ' + apiResponse[i].low + ';' +
+          ' stock volume: ' + apiResponse[i].volume + ';' +
+          ' stock volatility: ' + apiResponse[i].volatility + ';' +
+          ' stock last updated at: ' + apiResponse[i].updated_at);
+      }
+
+    } else {
+      console.log(err);
+    }
+})
+
+//read a json FILE!!!
+/* var fs = require('fs');
+fs.readFile('url_json', 'utf8', function(err, data) {
+    for (var stock in data) {
+      console.log(stock.symbol);
+    }
+}) */
+
+//CRUD each methods
 app.get('/api/:id', function(req, res, next) {
     Stocks.findById(req.param.id, function(err, data) {
         if (err) res.send(err);
@@ -52,17 +78,42 @@ app.set('view engine', 'ejs');
 
 //index page
 app.get('/', function(req, res) {
-  res.render('templates/index');
-})
+  var stocks = [
+    {
+    "symbol":"SNAP",
+    "open":17.75,
+    "close":22.32,
+    "trades": false
+    },
+    {
+    "symbol":"ORCL",
+    "open":47.75,
+    "close":62.32,
+    "trades": true
+    },
+    {
+    "symbol":"NVDA",
+    "open":32.75,
+    "close":56.32,
+    "trades": true
+    }
+  ];
 
+  var disclaimer = "trade all stocks in your own discretion!"
+
+  res.render('templates/index', {
+    stocks: stocks,
+    disclaimer: disclaimer
+  });
+})
 //about page
 app.get('/about', function(req, res) {
   res.render('templates/about');
 })
 
+//parsing synchronous JSON files
 var routes = require('./routes/apiStock');
 app.use('/', routes);
-
 
 app.listen(port);
 console.log('port is on ' + port);

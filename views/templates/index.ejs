@@ -11,20 +11,39 @@
 
 
     <div class="container">
-        welcome to the Index page
+        <br>
+        <div class="alert alert-warning" role="alert">
+            <%= disclaimer %>
+        </div>
+
+        <h2>welcome to the front page</h2>
+
+        <h5>here is the list of choices you have now: </h5>
+        <br>
+
+        <div id="stockApp"></div> 
+        <div class="list-group">
+            <% stocks.forEach(function(stock) { %>
+               <a href="#" class="list-group-item list-group-item-action">
+                    <%= stock.symbol %>, <%= stock.open %>, <%= stock.close %>, <%= stock.trades %>
+               </a>
+            <% }) %>
+        </div>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <% include ../partials/footer %>
     </div>
 
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <br>
-    <% include ../partials/footer %>
+
+
 </body>
 
 </html>
