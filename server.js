@@ -6,7 +6,11 @@ var app = express();
 var port = process.env.PORT || 8080;
 var bodyParser = require('body-parser');
 
+//render static resource files from assets
 app.use('/assets', express.static(__dirname + '/assets'));
+
+//render static file from build
+app.use('/build', express.static('build'));
 
 //connects to DB
 var mongoose = require('mongoose');
@@ -39,7 +43,7 @@ var request = require('request');
 var url_json = 'http://localhost:8080/api/stocks';
 request(url_json, function(err, res, body) {
 
-    if (!err && res.statusCode === 200) {
+    /*if (!err && res.statusCode === 200) {
       var apiResponse = JSON.parse(body);
 
       for (var i=0; i<apiResponse.length; i++) {
@@ -54,7 +58,7 @@ request(url_json, function(err, res, body) {
 
     } else {
       console.log(err);
-    }
+    }*/
 })
 
 //read a json FILE!!!
@@ -76,7 +80,7 @@ app.get('/api/:id', function(req, res, next) {
 //views and templates
 app.set('view engine', 'ejs');
 
-//index page
+/*//index page
 app.get('/', function(req, res) {
   var stocks = [
     {
@@ -109,7 +113,7 @@ app.get('/', function(req, res) {
 //about page
 app.get('/about', function(req, res) {
   res.render('templates/about');
-})
+})*/
 
 //parsing synchronous JSON files
 var routes = require('./routes/apiStock');
