@@ -1,0 +1,14 @@
+
+
+.symbolInfo {
+    display: none;
+}
+
+.symbolInfo .open {
+    display: inline;
+}
+
+.symbolName {
+    font-style: italic;
+    color: inherit;
+}

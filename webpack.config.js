@@ -8,7 +8,6 @@ var HTMLWebpackPluginConfig = new HTMLWebpackPlugin({
     inject: 'body'
 });
 
-
 module.exports = {
     /*
     What JavaScript file it should transform.
@@ -27,6 +26,10 @@ module.exports = {
            query: {
               presets: ['react']
            }
+          },
+          {
+            test: /\.css$/,
+            loader: 'style-loader!css-loader?modules&importLoaders=1'
           }
         ]
     },
@@ -36,5 +39,8 @@ module.exports = {
       path: __dirname + '/build'
     },
 
+    //watch: true,
+
     plugins: [HTMLWebpackPluginConfig]
 };
+
