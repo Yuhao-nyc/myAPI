@@ -5,7 +5,7 @@ Templates rendered by EJS
 
 Clone the repo and npm install
 
-Check you localhost:8080
+Check your localhost:8080
 
 And also remember to npm run build your ./app 
 
