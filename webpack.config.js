@@ -39,7 +39,7 @@ module.exports = {
       path: __dirname + '/build'
     },
 
-    //watch: true,
+    watch: true,
 
     plugins: [HTMLWebpackPluginConfig]
 };

@@ -10426,6 +10426,38 @@ var collapseStyles = {
   }
 };
 
+var NoticeBox = React.createClass({
+  displayName: 'NoticeBox',
+
+  render: function () {
+    return React.createElement(
+      'div',
+      { className: 'alert alert-success', role: 'alert' },
+      React.createElement(
+        'strong',
+        null,
+        'Congratulations!'
+      ),
+      ' You have bought ',
+      this.props.sharesBought,
+      ' shares.'
+    );
+  }
+});
+
+var AlertBox = React.createClass({
+  displayName: 'AlertBox',
+
+  render: function () {
+    return React.createElement(
+      'div',
+      { className: "alert alert-danger " + styles.alertBox + "", role: 'alert' },
+      'You have sold all you shares',
+      React.createElement('br', null)
+    );
+  }
+});
+
 var JsonApp = React.createClass({
   displayName: 'JsonApp',
 
@@ -10433,7 +10465,11 @@ var JsonApp = React.createClass({
   getInitialState: function () {
     return {
       stocks: [],
-      active: false
+      active: false,
+      shares: 0,
+      sharesBought: 0,
+      sharesSold: 0,
+      symbol: 'BABA' //TODO
     };
   },
 
@@ -10451,7 +10487,7 @@ var JsonApp = React.createClass({
     this.serverRequest.abort();
   },
 
-  handleClick: function () {
+  handleToggle: function () {
     if (this.state.active) {
       this.setState({
         active: false
@@ -10463,6 +10499,30 @@ var JsonApp = React.createClass({
     }
   },
 
+  handleBuy: function () {
+    var owned_shares = this.state.shares + 1;
+
+    this.setState({ shares: owned_shares });
+
+    if (owned_shares < 0) {
+      alert('you already sold all you shares!!!');
+      this.setState({ shares: 0 });
+    }
+    console.log('boughted ' + owned_shares + ' share');
+  },
+
+  handleSell: function () {
+    var owned_shares = this.state.shares;
+
+    this.setState({ shares: owned_shares - 1 });
+
+    if (owned_shares < 1) {
+      alert('you already sold all you shares!!!');
+      this.setState({ shares: 0 });
+    }
+    console.log('sold ' + this.state.shares + ' share');
+  },
+
   render: function () {
     var stateStyle = this.state.active ? collapseStyles.open : collapseStyles.closed;
 
@@ -10472,35 +10532,64 @@ var JsonApp = React.createClass({
       React.createElement('br', null),
       React.createElement(
         'button',
-        { onClick: this.handleClick, className: "btn btn-success" },
-        'Toggle Details'
+        { onClick: this.handleToggle, className: "btn btn-info " + styles.btnTrans + "" },
+        'View All'
       ),
+      React.createElement('br', null),
+      ' ',
+      React.createElement('br', null),
+      React.createElement(NoticeBox, { sharesBought: this.state.shares, symbolBought: this.state.symbol }),
+      React.createElement(AlertBox, { alertContent: this.state.content }),
       React.createElement(
         'div',
         { className: 'list-group' },
-        React.createElement('br', null),
         this.state.stocks.map(function (data, index) {
 
           return React.createElement(
             'div',
-            { className: "list-group-item list-group-item-action flex-column align-items-start" + (index === 0 ? " active" : " "), key: index },
+            { className: "list-group-item list-group-item-action flex-column align-items-start", key: index },
             React.createElement(
               'div',
-              { className: "d-flex w-100 justify-content-between " },
+              { className: "d-flex w-100 justify-content-between" },
               React.createElement(
                 'h5',
-                { className: 'mb-1' },
-                'Stock Symbol:  ',
+                { className: 'mb-1', onClick: this.handleToggle },
+                React.createElement(
+                  'span',
+                  { className: styles.symbolTitle },
+                  'Stock Symbol:'
+                ),
+                ' ',
                 React.createElement(
                   'span',
                   { className: styles.symbolName },
                   data.symbol
-                )
+                ),
+                ' $',
+                data.price
               ),
               React.createElement(
                 'small',
                 null,
-                '0 shares'
+                this.state.shares,
+                '\xA0',
+                React.createElement(
+                  'span',
+                  { className: styles.colorGrey },
+                  'shares'
+                ),
+                '\xA0\xA0\xA0\xA0',
+                React.createElement(
+                  'button',
+                  { type: 'button', className: "btn btn-outline-success btn-sm " + styles.btnTrans + "", onClick: this.handleBuy },
+                  'Buy'
+                ),
+                '\xA0\xA0',
+                React.createElement(
+                  'button',
+                  { type: 'button', className: "btn btn-outline-danger btn-sm " + styles.btnTrans + "", onClick: this.handleSell },
+                  'Sell'
+                )
               )
             ),
             React.createElement(
@@ -11501,13 +11590,16 @@ exports = module.exports = __webpack_require__(114)(undefined);
 
 
 // module
-exports.push([module.i, "\r\n\r\n._3XfBe3WSZj6DDEuoacg0mA {\r\n    display: none;\r\n}\r\n\r\n._3XfBe3WSZj6DDEuoacg0mA .h1yPkQ2HnzDpfwuZu_YcM {\r\n    display: inline;\r\n}\r\n\r\n._2kSvSfOwTe_NXkG95L4ewc {\r\n    font-style: italic;\r\n    color: inherit;\r\n}\r\n", ""]);
+exports.push([module.i, "._2kSvSfOwTe_NXkG95L4ewc {\r\n    font-style: italic;\r\n    color: inherit;\r\n    cursor: pointer;\r\n}\r\n\r\n.IW7Rs9fR853uXv6RgXeNs:hover {\r\n    cursor: pointer;\r\n}\r\n\r\n.ErDH59BrzRfk32Tv6pChV {\r\n    color: #94999c;\r\n}\r\n\r\n._2W-53IOpLF7YYuCou28ysK {\r\n    display: none;\r\n}\r\n\r\n._2W-53IOpLF7YYuCou28ysK .h1yPkQ2HnzDpfwuZu_YcM{\r\n    display: inline;\r\n}\r\n\r\n._2dsgmWxEzq7V2-ahT4QwKX {\r\n    font-size: 12px;\r\n    color: #94999c;\r\n    cursor: pointer;\r\n}\r\n\r\n", ""]);
 
 // exports
 exports.locals = {
-	"symbolInfo": "_3XfBe3WSZj6DDEuoacg0mA",
+	"symbolName": "_2kSvSfOwTe_NXkG95L4ewc",
+	"btnTrans": "IW7Rs9fR853uXv6RgXeNs",
+	"colorGrey": "ErDH59BrzRfk32Tv6pChV",
+	"alertBox": "_2W-53IOpLF7YYuCou28ysK",
 	"open": "h1yPkQ2HnzDpfwuZu_YcM",
-	"symbolName": "_2kSvSfOwTe_NXkG95L4ewc"
+	"symbolTitle": "_2dsgmWxEzq7V2-ahT4QwKX"
 };
 
 /***/ }),

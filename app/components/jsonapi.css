@@ -1,14 +1,28 @@
-
-
-.symbolInfo {
-    display: none;
-}
-
-.symbolInfo .open {
-    display: inline;
-}
-
 .symbolName {
     font-style: italic;
     color: inherit;
+    cursor: pointer;
 }
+
+.btnTrans:hover {
+    cursor: pointer;
+}
+
+.colorGrey {
+    color: #94999c;
+}
+
+.alertBox {
+    display: none;
+}
+
+.alertBox .open{
+    display: inline;
+}
+
+.symbolTitle {
+    font-size: 12px;
+    color: #94999c;
+    cursor: pointer;
+}
+
