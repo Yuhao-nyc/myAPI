@@ -10,7 +10,7 @@ var collapseStyles = {
     }
 }
 
-var NoticeBox = React. createClass({
+var NoticeBox = React.createClass({
     render: function() {
         return (
             <div className="alert alert-success" role="alert">
@@ -20,7 +20,7 @@ var NoticeBox = React. createClass({
     }
 })
 
-var AlertBox = React. createClass({
+var AlertBox = React.createClass({
     render: function() {
         return (
             <div className={"alert alert-danger "+ styles.alertBox +""} role="alert">
