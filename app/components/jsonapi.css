@@ -26,3 +26,22 @@
     cursor: pointer;
 }
 
+.toggleOpen {
+    display: inline;
+    opacity: 1;
+    transition: opacity 0.37s linear;
+}
+
+.toggleClose {
+    display: hidden;
+    opacity: 0;
+    transition: display 0s 0.12s, opacity 0.12s linear;
+    height: 0;
+}
+
+.stockDetail {
+    display: inline;
+    opacity: 1;
+    transition: display 0s 0.37s, opacity 0.37s linear;
+    height: 20px;
+}
