@@ -8,7 +8,7 @@ var JsonApp = React.createClass({
             <div className="container">
                 <div className="list-group">
                     <StockInfo />
-                </div>   
+                </div>
             </div>
 
         )

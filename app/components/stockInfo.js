@@ -1,9 +1,6 @@
 var React = require('react');
 var axios = require('axios');
 
-var StockPanel = require('./stockPanel.js');
-var StockData = require('./stockData.js');
-
 var styles = require('./jsonapi.css');
 
 var NoticeBox = React.createClass({
@@ -27,6 +24,7 @@ var AlertBox = React.createClass({
     }
 })
 
+
 var stockInfo = React.createClass({
       getInitialState: function() {
         return {
@@ -35,18 +33,19 @@ var stockInfo = React.createClass({
             shares: 0,
             sharesBought: 0,
             sharesSold: 0,
-            symbol: ' ' //TODO
+            symbol: ' ', //TODO,
+            owned_shares: 0
         }
       },
 
       componentDidMount: function() {
-        var _this = this;
+        var self = this;
 
         this.serverRequest =
           axios
             .get("http://localhost:8080/api/stocks")
             .then(function(result) {
-              _this.setState({
+              self.setState({
                 stocks: result.data
               });
             })
@@ -56,32 +55,49 @@ var stockInfo = React.createClass({
         this.serverRequest.abort();
       },
 
-      handleBuy: function() {
-         var owned_shares = this.state.shares + 1;
+      handleBuy: function(key) {
 
-         this.setState({shares: owned_shares});
+         //var owned_shares = this.state.shares + 1;
+         //this.setState({shares: owned_shares});
 
-         if (owned_shares < 0) {
-           alert('you already sold all you shares!!!')
-           this.setState({shares: 0});
-         }
+         var allRecords = document.querySelectorAll('[data-shares="' + key + '"]');
+
+         allRecords.forEach(function(record) {
+            var boughtShares = parseInt(record.innerHTML) + 1;
+            //console.log(plusShares);
+            return record.innerHTML = boughtShares;
+         })
+
          //console.log('boughted '+ owned_shares +' share')
+
       },
 
-      handleSell: function() {
-         var owned_shares = this.state.shares;
+      handleSell: function(key) {
+         //var owned_shares = this.state.shares;
+         //this.setState({shares: owned_shares -1});
 
-         this.setState({shares: owned_shares -1});
+         var allRecords = document.querySelectorAll('[data-shares="' + key + '"]');
 
-         if (owned_shares < 1) {
+         allRecords.forEach(function(record) {
+            if (record.innerHTML <= 0) {
+                alert('you have no shares to sell...');
+                return record.innerHTML = 0;
+            } else {
+                var soldShares = parseInt(record.innerHTML) - 1;
+                //console.log(plusShares);
+                return record.innerHTML = soldShares;
+            }
+         })
+
+         /*if (owned_shares < 1) {
            alert('you already sold all you shares!!!')
            this.setState({shares: 0});
 
-         }
+         }*/
          //console.log('sold '+ this.state.shares +' share')
       },
 
-      handleToggle: function() {
+      handleToggleAll: function() {
         if (this.state.active) {
           this.setState({
             active: false
@@ -107,12 +123,12 @@ var stockInfo = React.createClass({
           return (
               <div>
                   <br />
-                  <button onClick={this.handleToggle} className={"btn btn-info "+ styles.btnTrans +""}>View All</button>
+                  <button onClick={this.handleToggleAll} className={"btn btn-info "+ styles.btnTrans +""}>View All</button>
 
                   <br /> <br />
                   <NoticeBox sharesBought={this.state.shares} symbolBought={this.state.symbol}/>
 
-                  <AlertBox alertContent={this.state.content} />
+                  <AlertBox alertContent={this.state.content} alertStatus={this.state.status}/>
 
                            {this.state.stocks.map(function(data, index) {
 
@@ -125,10 +141,10 @@ var stockInfo = React.createClass({
                                             <button type="button" className={"btn btn-outline-primary btn-sm "+ styles.btnTrans +""} onClick={self.toggleDataByKey.bind(this, index)}>more...</button>
                                         </h5>
                                         <small>
-                                          {this.state.shares}&nbsp;
+                                          <span data-shares={index}>0</span>&nbsp;
                                           <span className={styles.colorGrey}>shares</span>&nbsp;&nbsp;&nbsp;&nbsp;
-                                          <button type="button" className={"btn btn-outline-success btn-sm "+ styles.btnTrans +""} onClick={this.handleBuy}>Buy</button>&nbsp;&nbsp;
-                                          <button type="button" className={"btn btn-outline-danger btn-sm "+ styles.btnTrans +""} onClick={this.handleSell}>Sell</button>
+                                          <button type="button" className={"btn btn-outline-success btn-sm "+ styles.btnTrans +""} onClick={self.handleBuy.bind(this, index)}>Buy</button>&nbsp;&nbsp;
+                                          <button type="button" className={"btn btn-outline-danger btn-sm "+ styles.btnTrans +""} onClick={self.handleSell.bind(this, index)}>Sell</button>
                                         </small>
                                       </div>
 
