@@ -11373,259 +11373,257 @@ var axios = __webpack_require__(95);
 
 var styles = __webpack_require__(214);
 
-var NoticeBox = React.createClass({
-    displayName: 'NoticeBox',
-
-    render: function () {
-        return React.createElement(
-            'div',
-            { className: 'alert alert-success', role: 'alert' },
-            React.createElement(
-                'strong',
-                null,
-                'Congratulations!'
-            ),
-            ' You have bought ',
-            this.props.sharesBought,
-            ' shares.'
-        );
-    }
-});
-
-var AlertBox = React.createClass({
-    displayName: 'AlertBox',
-
-    render: function () {
-        return React.createElement(
-            'div',
-            { className: "alert alert-danger " + styles.alertBox + "", role: 'alert' },
-            'You have sold all you shares',
-            React.createElement('br', null)
-        );
-    }
-});
-
 var stockInfo = React.createClass({
-    displayName: 'stockInfo',
+  displayName: 'stockInfo',
 
-    getInitialState: function () {
-        return {
-            stocks: [],
-            active: false,
-            shares: 0,
-            sharesBought: 0,
-            sharesSold: 0,
-            symbol: ' ', //TODO,
-            owned_shares: 0
-        };
-    },
+  getInitialState: function () {
+    return {
+      stocks: [],
+      active: false,
+      shares: 0,
+      boughtShares: 0,
+      soldShares: 0,
+      symbol: ' ', //TODO,
+      owned_shares: 0,
+      noSharesStatus: styles.toggleClose
+    };
+  },
 
-    componentDidMount: function () {
-        var self = this;
+  componentWillMount: function () {},
 
-        this.serverRequest = axios.get("http://localhost:8080/api/stocks").then(function (result) {
-            self.setState({
-                stocks: result.data
-            });
+  componentDidMount: function () {
+    var self = this;
+
+    this.serverRequest = axios.get("http://localhost:8080/api/stocks").then(function (result) {
+      self.setState({
+        stocks: result.data
+      });
+    });
+  },
+
+  componentWillUnmount: function () {
+    this.serverRequest.abort();
+  },
+
+  handleBuy: function (key) {
+
+    //var owned_shares = this.state.shares + 1;
+    //this.setState({shares: owned_shares});
+
+    var allRecords = document.querySelectorAll('[data-shares="' + key + '"]'),
+        self = this;
+
+    allRecords.forEach(function (record) {
+      var boughtShares = parseInt(record.innerHTML) + 1;
+      //console.log(plusShares);
+      return record.innerHTML = boughtShares;
+    });
+
+    self.setState({
+      noSharesStatus: styles.toggleClose
+    });
+    //console.log('boughted '+ owned_shares +' share')
+  },
+
+  handleSell: function (key) {
+    //var owned_shares = this.state.shares;
+    //this.setState({shares: owned_shares -1});
+
+    var allRecords = document.querySelectorAll('[data-shares="' + key + '"]'),
+        self = this;
+
+    allRecords.forEach(function (record) {
+      if (record.innerHTML <= 0) {
+        record.innerHTML = 0;
+        self.setState({
+          noSharesStatus: styles.toggleOpen
         });
-    },
+        setTimeout(function () {
+          self.setState({ noSharesStatus: styles.toggleClose });
+        }, 100000);
+      } else {
+        var soldShares = parseInt(record.innerHTML) - 1;
+        //console.log(plusShares);
+        record.innerHTML = soldShares;
+      }
+    });
 
-    componentWillUnmount: function () {
-        this.serverRequest.abort();
-    },
+    /*if (owned_shares < 1) {
+      alert('you already sold all you shares!!!')
+      this.setState({shares: 0});
+      }*/
+    //console.log('sold '+ this.state.shares +' share')
+  },
 
-    handleBuy: function (key) {
+  handleToggleAll: function () {
+    if (this.state.active) {
+      this.setState({
+        active: false
+      });
+    } else {
+      this.setState({
+        active: true
+      });
+    }
+  },
 
-        //var owned_shares = this.state.shares + 1;
-        //this.setState({shares: owned_shares});
+  handleToggle: function (key) {
+    var allKeyRecords = document.querySelectorAll('[data-toggle="' + key + '"]');
+    allKeyRecords.forEach(function (record) {
+      return record.classList.toggle(styles.stockDetail);
+    });
+  },
 
-        var allRecords = document.querySelectorAll('[data-shares="' + key + '"]');
+  render: function () {
+    var stateStyle = this.state.active ? styles.toggleOpen : styles.toggleClose;
+    var self = this;
 
-        allRecords.forEach(function (record) {
-            var boughtShares = parseInt(record.innerHTML) + 1;
-            //console.log(plusShares);
-            return record.innerHTML = boughtShares;
-        });
-
-        //console.log('boughted '+ owned_shares +' share')
-    },
-
-    handleSell: function (key) {
-        //var owned_shares = this.state.shares;
-        //this.setState({shares: owned_shares -1});
-
-        var allRecords = document.querySelectorAll('[data-shares="' + key + '"]');
-
-        allRecords.forEach(function (record) {
-            if (record.innerHTML <= 0) {
-                alert('you have no shares to sell...');
-                return record.innerHTML = 0;
-            } else {
-                var soldShares = parseInt(record.innerHTML) - 1;
-                //console.log(plusShares);
-                return record.innerHTML = soldShares;
-            }
-        });
-
-        /*if (owned_shares < 1) {
-          alert('you already sold all you shares!!!')
-          this.setState({shares: 0});
-          }*/
-        //console.log('sold '+ this.state.shares +' share')
-    },
-
-    handleToggleAll: function () {
-        if (this.state.active) {
-            this.setState({
-                active: false
-            });
-        } else {
-            this.setState({
-                active: true
-            });
-        }
-    },
-
-    toggleDataByKey: function (key) {
-        var allKeyRecords = document.querySelectorAll('[data-toggle="' + key + '"]');
-        allKeyRecords.forEach(function (record) {
-            return record.classList.toggle(styles.stockDetail);
-        });
-    },
-
-    render: function () {
-        var stateStyle = this.state.active ? styles.toggleOpen : styles.toggleClose;
-        var self = this;
+    return React.createElement(
+      'div',
+      null,
+      React.createElement('br', null),
+      React.createElement(
+        'div',
+        { className: 'float-right' },
+        React.createElement(
+          'button',
+          { onClick: this.handleToggleAll, className: "btn btn-info " + styles.btnTrans + "" },
+          'View All'
+        )
+      ),
+      React.createElement('br', null),
+      ' ',
+      React.createElement('br', null),
+      React.createElement(
+        'div',
+        { className: styles.statusContainer },
+        React.createElement(
+          'div',
+          { className: "alert alert-danger " + this.state.noSharesStatus + "", role: 'alert' },
+          React.createElement(
+            'strong',
+            null,
+            'Alert!'
+          ),
+          ' You have sold all your shares of this stock',
+          React.createElement('br', null)
+        )
+      ),
+      this.state.stocks.map(function (data, index) {
 
         return React.createElement(
+          'div',
+          { className: "list-group-item list-group-item-action flex-column align-items-start", key: index },
+          React.createElement(
             'div',
-            null,
-            React.createElement('br', null),
+            { className: "d-flex w-100 justify-content-between" },
             React.createElement(
+              'h5',
+              { className: 'mb-1' },
+              React.createElement(
+                'span',
+                { className: styles.symbolTitle },
+                'Stock Symbol:'
+              ),
+              ' ',
+              React.createElement(
+                'span',
+                { className: styles.symbolName },
+                data.symbol
+              ),
+              ' $',
+              data.price,
+              '\xA0\xA0',
+              React.createElement(
                 'button',
-                { onClick: this.handleToggleAll, className: "btn btn-info " + styles.btnTrans + "" },
-                'View All'
+                { type: 'button', className: "btn btn-outline-info btn-sm " + styles.btnTrans + "", onClick: self.handleToggle.bind(this, index) },
+                'more...'
+              )
             ),
-            React.createElement('br', null),
-            ' ',
-            React.createElement('br', null),
-            React.createElement(NoticeBox, { sharesBought: this.state.shares, symbolBought: this.state.symbol }),
-            React.createElement(AlertBox, { alertContent: this.state.content, alertStatus: this.state.status }),
-            this.state.stocks.map(function (data, index) {
-
-                return React.createElement(
-                    'div',
-                    { className: "list-group-item list-group-item-action flex-column align-items-start", key: index },
-                    React.createElement(
-                        'div',
-                        { className: "d-flex w-100 justify-content-between" },
-                        React.createElement(
-                            'h5',
-                            { className: 'mb-1' },
-                            React.createElement(
-                                'span',
-                                { className: styles.symbolTitle },
-                                'Stock Symbol:'
-                            ),
-                            ' ',
-                            React.createElement(
-                                'span',
-                                { className: styles.symbolName },
-                                data.symbol
-                            ),
-                            ' $',
-                            data.price,
-                            '\xA0\xA0',
-                            React.createElement(
-                                'button',
-                                { type: 'button', className: "btn btn-outline-primary btn-sm " + styles.btnTrans + "", onClick: self.toggleDataByKey.bind(this, index) },
-                                'more...'
-                            )
-                        ),
-                        React.createElement(
-                            'small',
-                            null,
-                            React.createElement(
-                                'span',
-                                { 'data-shares': index },
-                                '0'
-                            ),
-                            '\xA0',
-                            React.createElement(
-                                'span',
-                                { className: styles.colorGrey },
-                                'shares'
-                            ),
-                            '\xA0\xA0\xA0\xA0',
-                            React.createElement(
-                                'button',
-                                { type: 'button', className: "btn btn-outline-success btn-sm " + styles.btnTrans + "", onClick: self.handleBuy.bind(this, index) },
-                                'Buy'
-                            ),
-                            '\xA0\xA0',
-                            React.createElement(
-                                'button',
-                                { type: 'button', className: "btn btn-outline-danger btn-sm " + styles.btnTrans + "", onClick: self.handleSell.bind(this, index) },
-                                'Sell'
-                            )
-                        )
-                    ),
-                    React.createElement(
-                        'div',
-                        { className: stateStyle, 'data-toggle': index },
-                        React.createElement(
-                            'small',
-                            null,
-                            'Open Price: ',
-                            data.open
-                        ),
-                        '\xA0',
-                        React.createElement(
-                            'small',
-                            null,
-                            'Highest Price: ',
-                            data.high
-                        ),
-                        '\xA0',
-                        React.createElement(
-                            'small',
-                            null,
-                            'Lowest Price: ',
-                            data.low
-                        ),
-                        '\xA0',
-                        React.createElement(
-                            'small',
-                            null,
-                            'All Price: ',
-                            (data.low + data.high).toFixed(2)
-                        ),
-                        '\xA0',
-                        React.createElement(
-                            'small',
-                            null,
-                            'Volume: ',
-                            data.volume
-                        ),
-                        '\xA0',
-                        React.createElement(
-                            'small',
-                            null,
-                            'Average Volume: ',
-                            data.average_volume
-                        ),
-                        '\xA0',
-                        React.createElement(
-                            'small',
-                            null,
-                            'Volatility: ',
-                            data.volatility
-                        )
-                    )
-                );
-            }.bind(this))
+            React.createElement(
+              'small',
+              null,
+              React.createElement(
+                'span',
+                { 'data-shares': index },
+                '0'
+              ),
+              '\xA0',
+              React.createElement(
+                'span',
+                { className: styles.colorGrey },
+                'shares'
+              ),
+              '\xA0\xA0\xA0\xA0',
+              React.createElement(
+                'button',
+                { type: 'button', className: "btn btn-outline-success btn-sm " + styles.btnTrans + "", onClick: self.handleBuy.bind(this, index) },
+                'Buy'
+              ),
+              '\xA0\xA0',
+              React.createElement(
+                'button',
+                { type: 'button', className: "btn btn-outline-danger btn-sm " + styles.btnTrans + "", onClick: self.handleSell.bind(this, index) },
+                'Sell'
+              )
+            )
+          ),
+          React.createElement(
+            'div',
+            { className: stateStyle, 'data-toggle': index },
+            React.createElement(
+              'small',
+              null,
+              'Open Price: ',
+              data.open
+            ),
+            '\xA0',
+            React.createElement(
+              'small',
+              null,
+              'Highest Price: ',
+              data.high
+            ),
+            '\xA0',
+            React.createElement(
+              'small',
+              null,
+              'Lowest Price: ',
+              data.low
+            ),
+            '\xA0',
+            React.createElement(
+              'small',
+              null,
+              'All Price: ',
+              (data.low + data.high).toFixed(2)
+            ),
+            '\xA0',
+            React.createElement(
+              'small',
+              null,
+              'Volume: ',
+              data.volume
+            ),
+            '\xA0',
+            React.createElement(
+              'small',
+              null,
+              'Average Volume: ',
+              data.average_volume
+            ),
+            '\xA0',
+            React.createElement(
+              'small',
+              null,
+              'Volatility: ',
+              data.volatility
+            )
+          )
         );
-    }
+      }.bind(this))
+    );
+  }
 });
 
 module.exports = stockInfo;
@@ -11639,19 +11637,20 @@ exports = module.exports = __webpack_require__(115)(undefined);
 
 
 // module
-exports.push([module.i, "._2kSvSfOwTe_NXkG95L4ewc {\r\n    font-style: italic;\r\n    color: inherit;\r\n    cursor: pointer;\r\n}\r\n\r\n.IW7Rs9fR853uXv6RgXeNs:hover {\r\n    cursor: pointer;\r\n}\r\n\r\n.ErDH59BrzRfk32Tv6pChV {\r\n    color: #94999c;\r\n}\r\n\r\n._2W-53IOpLF7YYuCou28ysK {\r\n    display: none;\r\n}\r\n\r\n._2W-53IOpLF7YYuCou28ysK .h1yPkQ2HnzDpfwuZu_YcM{\r\n    display: inline;\r\n}\r\n\r\n._2dsgmWxEzq7V2-ahT4QwKX {\r\n    font-size: 12px;\r\n    color: #94999c;\r\n    cursor: pointer;\r\n}\r\n\r\n.B-w5vjOjB7Z33ZVblxSKT {\r\n    display: inline;\r\n    opacity: 1;\r\n    transition: opacity 0.37s linear;\r\n}\r\n\r\n._3zSdQa96FiYyEdypsqObP4 {\r\n    display: hidden;\r\n    opacity: 0;\r\n    transition: display 0s 0.12s, opacity 0.12s linear;\r\n    height: 0;\r\n}\r\n\r\n.Phg6fKa8qGVD4tvE0dFx7 {\r\n    display: inline;\r\n    opacity: 1;\r\n    transition: display 0s 0.37s, opacity 0.37s linear;\r\n    height: 20px;\r\n}", ""]);
+exports.push([module.i, "._-0kB1bitp5REwZIrsieUV {\r\n    font-style: italic;\r\n    color: inherit;\r\n    cursor: pointer;\r\n}\r\n\r\n._1I6WF4ylDSX14KdWw108Sz:hover {\r\n    cursor: pointer;\r\n}\r\n\r\n._3G4qpxirfsyYBHjILa7xO8 {\r\n    color: #94999c;\r\n}\r\n\r\n._34U41G3F118XsCdbwonAGN {\r\n    display: none;\r\n}\r\n\r\n._34U41G3F118XsCdbwonAGN ._13YqkQfmwGzYv02sH6Z3ul{\r\n    display: inline;\r\n}\r\n\r\n.O15zOZ1Oxhl4XM02ErTAc {\r\n    font-size: 12px;\r\n    color: #94999c;\r\n    cursor: pointer;\r\n}\r\n\r\n._3z4dnhJGPwX5VOH0q2AYrD {\r\n    display: inline-table;\r\n    opacity: 1;\r\n    transition: opacity 0.37s linear;\r\n    width: 100%;\r\n}\r\n\r\n._1P5BYgPK95A2A7PaPiNfY9 {\r\n    display: hidden;\r\n    opacity: 0;\r\n    transition: display 0s 0.12s, opacity 0.12s linear;\r\n    height: 0;\r\n}\r\n\r\n._29-MksRtw_uHUTSIqZSQyg {\r\n    display: inline-table;\r\n    opacity: 1;\r\n    transition: display 0s 0.37s, opacity 0.37s linear;\r\n}\r\n\r\n._3DjIwGdCo1oeE4q4ugfTm7 {\r\n    display: block;\r\n    height: 50px;\r\n    margin: 0 0 20px;\r\n}\r\n", ""]);
 
 // exports
 exports.locals = {
-	"symbolName": "_2kSvSfOwTe_NXkG95L4ewc",
-	"btnTrans": "IW7Rs9fR853uXv6RgXeNs",
-	"colorGrey": "ErDH59BrzRfk32Tv6pChV",
-	"alertBox": "_2W-53IOpLF7YYuCou28ysK",
-	"open": "h1yPkQ2HnzDpfwuZu_YcM",
-	"symbolTitle": "_2dsgmWxEzq7V2-ahT4QwKX",
-	"toggleOpen": "B-w5vjOjB7Z33ZVblxSKT",
-	"toggleClose": "_3zSdQa96FiYyEdypsqObP4",
-	"stockDetail": "Phg6fKa8qGVD4tvE0dFx7"
+	"symbolName": "_-0kB1bitp5REwZIrsieUV",
+	"btnTrans": "_1I6WF4ylDSX14KdWw108Sz",
+	"colorGrey": "_3G4qpxirfsyYBHjILa7xO8",
+	"alertBox": "_34U41G3F118XsCdbwonAGN",
+	"open": "_13YqkQfmwGzYv02sH6Z3ul",
+	"symbolTitle": "O15zOZ1Oxhl4XM02ErTAc",
+	"toggleOpen": "_3z4dnhJGPwX5VOH0q2AYrD",
+	"toggleClose": "_1P5BYgPK95A2A7PaPiNfY9",
+	"stockDetail": "_29-MksRtw_uHUTSIqZSQyg",
+	"statusContainer": "_3DjIwGdCo1oeE4q4ugfTm7"
 };
 
 /***/ }),
@@ -24373,8 +24372,8 @@ if(content.locals) module.exports = content.locals;
 if(false) {
 	// When the styles change, update the <style> tags
 	if(!content.locals) {
-		module.hot.accept("!!../../node_modules/css-loader/index.js?modules&importLoaders=1!./jsonapi.css", function() {
-			var newContent = require("!!../../node_modules/css-loader/index.js?modules&importLoaders=1!./jsonapi.css");
+		module.hot.accept("!!../../node_modules/css-loader/index.js?modules&importLoaders=1!./stockInfo.css", function() {
+			var newContent = require("!!../../node_modules/css-loader/index.js?modules&importLoaders=1!./stockInfo.css");
 			if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
 			update(newContent);
 		});

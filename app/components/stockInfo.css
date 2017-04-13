@@ -27,9 +27,10 @@
 }
 
 .toggleOpen {
-    display: inline;
+    display: inline-table;
     opacity: 1;
     transition: opacity 0.37s linear;
+    width: 100%;
 }
 
 .toggleClose {
@@ -40,8 +41,13 @@
 }
 
 .stockDetail {
-    display: inline;
+    display: inline-table;
     opacity: 1;
     transition: display 0s 0.37s, opacity 0.37s linear;
-    height: 20px;
+}
+
+.statusContainer {
+    display: block;
+    height: 50px;
+    margin: 0 0 20px;
 }
