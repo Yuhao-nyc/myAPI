@@ -73,7 +73,7 @@ var stockInfo = React.createClass({
                 self.setState({
                     noSharesStatus: styles.toggleOpen
                 });
-                setTimeout(function() {self.setState({noSharesStatus: styles.toggleClose})}, 100000);
+                setTimeout(function() {self.setState({noSharesStatus: styles.toggleClose})}, 3666);
 
 
             } else {
@@ -146,7 +146,7 @@ var stockInfo = React.createClass({
                               <small>
                                 <span data-shares={index}>0</span>&nbsp;
                                 <span className={styles.colorGrey}>shares</span>&nbsp;&nbsp;&nbsp;&nbsp;
-                                {/* <span>Cost: {(data.price)*0}</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; */}
+                                <span>Cost: {(data.price)*0}</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                 <button type="button" className={"btn btn-outline-success btn-sm "+ styles.btnTrans +""} onClick={self.handleBuy.bind(this, index)}>Buy</button>&nbsp;&nbsp;
                                 <button type="button" className={"btn btn-outline-danger btn-sm "+ styles.btnTrans +""} onClick={self.handleSell.bind(this, index)}>Sell</button>
                               </small>

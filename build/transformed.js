@@ -11440,7 +11440,7 @@ var stockInfo = React.createClass({
         });
         setTimeout(function () {
           self.setState({ noSharesStatus: styles.toggleClose });
-        }, 100000);
+        }, 3666);
       } else {
         var soldShares = parseInt(record.innerHTML) - 1;
         //console.log(plusShares);
@@ -11555,6 +11555,13 @@ var stockInfo = React.createClass({
                 'shares'
               ),
               '\xA0\xA0\xA0\xA0',
+              React.createElement(
+                'span',
+                null,
+                'Cost: ',
+                data.price * 0
+              ),
+              '\xA0\xA0\xA0\xA0\xA0',
               React.createElement(
                 'button',
                 { type: 'button', className: "btn btn-outline-success btn-sm " + styles.btnTrans + "", onClick: self.handleBuy.bind(this, index) },
