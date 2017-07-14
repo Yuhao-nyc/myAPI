@@ -1,0 +1,11 @@
+﻿How big is the project?
+How long is it going to be maintained for?
+Is all of the functionality clearly defined in advance or are you expected to be flexible?
+If all of the features are already defined, what capabilities do you need?
+Are the domain model and business logic complex?
+What platforms are you targeting? Web, mobile, desktop?
+Do you need server-side rendering? Is SEO important?
+Will you be handling a lot of real-time event streams?
+How big is your team?
+How experienced are your developers and what is their background?
+Are there any ready-made component libraries that you would like to use?

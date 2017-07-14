@@ -1,0 +1,10 @@
+The second developer asked me how I would design a user interface for both an administrator and user and how I would set up an api to handle the data.
+
+
+The third developer asked me about how I would solve larger problems in a team setting.
+
+
+Write a debounce function! 
+
+Say there was a function that took 1 second to execute and you needed to run this function 10 million times, how would you cut down on the execution time?  
+Build a system that would run the functions concurrently.
